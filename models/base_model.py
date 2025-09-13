@@ -7,6 +7,7 @@ import uuid
 
 class BaseModel:
     def __init__(self, *args, **kwargs):
+        from models import storage
         if kwargs:
             for key, value in kwargs.items():
                 if key != "__class__":
@@ -18,6 +19,7 @@ class BaseModel:
             now = datetime.now()
             super().__setattr__("created_at", now)
             super().__setattr__("updated_at", now)
+            storage.new(self)
         
 
     def __str__(self):
@@ -29,7 +31,9 @@ class BaseModel:
             self.save()
 
     def save(self):
+        from models import storage
         super().__setattr__("updated_at", datetime.now())
+        storage.save()
 
     def to_dict(self):
         obj_dict = self.__dict__.copy()
