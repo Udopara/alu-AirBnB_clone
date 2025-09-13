@@ -6,20 +6,25 @@ from datetime import datetime
 import uuid
 
 class BaseModel:
-    def __init__(self):
-        super().__setattr__("id", str(uuid.uuid4()))
-        now = datetime.now()
-        super().__setattr__("created_at", now)
-        super().__setattr__("updated_at", now)
+    def __init__(self, *args, **kwargs):
+        if kwargs:
+            for key, value in kwargs.items():
+                if key != "__class__":
+                    if key in {"created_at", "updated_at"}:
+                        value = datetime.fromisoformat(value)
+                    setattr(self, key, value)
+        else:
+            super().__setattr__("id", str(uuid.uuid4()))
+            now = datetime.now()
+            super().__setattr__("created_at", now)
+            super().__setattr__("updated_at", now)
         
 
     def __str__(self):
         return f"[BaseModel] ({self.id}) {self.__dict__}"
     
     def __setattr__(self, name, value):
-        # Always set the attribute
         super().__setattr__(name, value)
-        # Update updated_at (but not during init of id/created_at/updated_at)
         if name not in {"id", "created_at", "updated_at"}:
             self.save()
 
