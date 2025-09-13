@@ -7,17 +7,24 @@ import uuid
 
 class BaseModel:
     def __init__(self):
-        self.id = str(uuid.uuid4())
-        self.created_at = datetime.now()
-        self.updated_at = self.created_at
+        super().__setattr__("id", str(uuid.uuid4()))
+        now = datetime.now()
+        super().__setattr__("created_at", now)
+        super().__setattr__("updated_at", now)
         
 
     def __str__(self):
         return f"[BaseModel] ({self.id}) {self.__dict__}"
+    
+    def __setattr__(self, name, value):
+        # Always set the attribute
+        super().__setattr__(name, value)
+        # Update updated_at (but not during init of id/created_at/updated_at)
+        if name not in {"id", "created_at", "updated_at"}:
+            self.save()
 
     def save(self):
-        """Simulate saving to DB/storage by updating timestamp"""
-        self.updated_at = datetime.now()
+        super().__setattr__("updated_at", datetime.now())
 
     def to_dict(self):
         obj_dict = self.__dict__.copy()
