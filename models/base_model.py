@@ -8,7 +8,7 @@ import uuid
 class BaseModel:
     def __init__(self):
         self.id = str(uuid.uuid4())
-        self.created_at = datetime.now().isoformat()
+        self.created_at = datetime.now()
         self.updated_at = self.created_at
         
 
@@ -17,11 +17,13 @@ class BaseModel:
 
     def save(self):
         """Simulate saving to DB/storage by updating timestamp"""
-        self.updated_at = datetime.now().isoformat()
+        self.updated_at = datetime.now()
 
     def to_dict(self):
         obj_dict = self.__dict__.copy()
         obj_dict["__class__"] = self.__class__.__name__
+        obj_dict["created_at"] = self.created_at.isoformat()
+        obj_dict["updated_at"] = self.updated_at.isoformat()
         return obj_dict
 
 
