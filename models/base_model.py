@@ -23,12 +23,10 @@ class BaseModel:
         
 
     def __str__(self):
-        return f"[BaseModel] ({self.id}) {self.__dict__}"
+        return f"[{self.__class__.__name__}] ({self.id}) {self.__dict__}"
     
     def __setattr__(self, name, value):
         super().__setattr__(name, value)
-        if name not in {"id", "created_at", "updated_at"}:
-            self.save()
 
     def save(self):
         from models import storage
@@ -41,7 +39,6 @@ class BaseModel:
         obj_dict["created_at"] = self.created_at.isoformat()
         obj_dict["updated_at"] = self.updated_at.isoformat()
         return obj_dict
-
 
 
 
