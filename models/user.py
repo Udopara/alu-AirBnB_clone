@@ -1,4 +1,4 @@
-#!/usr/bin/python3
+#!/usr/bin/python3 
 """
 User model that inherits from BaseModel
 """
